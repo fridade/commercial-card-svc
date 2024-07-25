@@ -44,10 +44,19 @@ pipeline {
                environment {
         CI = 'true'
         scannerHome='/opt/sonar-scanner'
-    }
+        }
             steps{
                 withSonarQubeEnv('sonar') {
                     sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+
+
+        stage('Quality Gate') {
+            steps {
+                script {
+                  waitForQualityGate abortPipeline: false, credentialsId: 'sonar' 
                 }
             }
         }
