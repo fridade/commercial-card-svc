@@ -28,9 +28,17 @@ pipeline {
         }
         stage('Build') {
             steps {
-               sh "mvn package"
+               sh "mvn package -DskipTests=true"
             }
         }
+        stage('Build-images') {
+            steps {
+                sh '''
+                   docker build -t  fridade/card-svc:jenkins-$BUILD_NUMBER .
+                '''
+            }
+        }
+
 
 
 
