@@ -1,7 +1,16 @@
 pipeline {
     agent any
+    environment {
+		DOCKERHUB_CREDENTIALS=credentials('docker-cred')
+	}
 
     stages {
+        stage('Login') {
+
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+        }
         stage('clean env') {
             steps {
                 sh '''
@@ -36,6 +45,12 @@ pipeline {
                 sh '''
                    docker build -t  fridade/card-svc:jenkins-$BUILD_NUMBER .
                 '''
+            }
+        }
+        stage('Push-ui') {
+          
+            steps {
+               sh 'docker push fridade/card-svc:jenkins-$BUILD_NUMBER'
             }
         }
 
