@@ -72,6 +72,11 @@ pipeline {
                 '''
             }
         }
+        stage('Docker Image Scan') {
+            steps {
+                sh "trivy image --format table -o trivy-image-report.html fridade/card-svc:jenkins-$BUILD_NUMBER "
+            }
+        }
         stage('Push-ui') {
           
             steps {
